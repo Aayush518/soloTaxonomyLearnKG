@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center">
+    <!-- Hero Section -->
+    <div class="mb-20 relative">
+        <div class="floating-element">
+            <h1 class="text-7xl font-black text-white mb-8 leading-tight drop-shadow-2xl">
+                Learn Knowledge Graphs
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-purple-300 to-blue-300">
+                    the Deep Way
+                </span>
+            </h1>
+        </div>
+        <p class="text-2xl text-white/90 max-w-4xl mx-auto mb-12 leading-relaxed drop-shadow-lg font-medium">
+            Master Knowledge Graphs through SOLO Taxonomy-based learning. Progress from basic concepts to advanced applications with 
+            <span class="font-bold text-pink-300 glow-effect px-2 py-1 rounded-lg">AI-powered adaptive feedback</span> and structured learning paths.
+        </p>
+        
+        <!-- AI Badge -->
+        <div class="inline-flex items-center glass-effect text-white px-8 py-4 rounded-full text-xl font-bold mb-12 shadow-2xl pulse-animation">
+            <i class="fas fa-robot text-3xl mr-4 text-pink-300"></i>
+            Powered by Gemini 2.0 Flash AI
+        </div>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="grid md:grid-cols-3 gap-12 mb-20">
+        <div class="topic-card p-10 shadow-2xl">
+            <div class="w-20 h-20 feature-icon rounded-3xl flex items-center justify-center mx-auto mb-8">
+                <i class="fas fa-brain text-4xl text-white"></i>
+            </div>
+            <h3 class="text-3xl font-bold mb-6 text-gray-800">SOLO Taxonomy</h3>
+            <p class="text-gray-600 text-xl leading-relaxed">Structured learning progression from surface to deep understanding with cognitive development tracking</p>
+        </div>
+
+        <div class="topic-card p-10 shadow-2xl">
+            <div class="w-20 h-20 feature-icon rounded-3xl flex items-center justify-center mx-auto mb-8">
+                <i class="fas fa-bolt text-4xl text-white"></i>
+            </div>
+            <h3 class="text-3xl font-bold mb-6 text-gray-800">AI-Powered Learning</h3>
+            <p class="text-gray-600 text-xl leading-relaxed">Personalized hints, feedback, and recommendations powered by Gemini 2.0 Flash AI</p>
+        </div>
+
+        <div class="topic-card p-10 shadow-2xl">
+            <div class="w-20 h-20 feature-icon rounded-3xl flex items-center justify-center mx-auto mb-8">
+                <i class="fas fa-chart-bar text-4xl text-white"></i>
+            </div>
+            <h3 class="text-3xl font-bold mb-6 text-gray-800">Progress Analytics</h3>
+            <p class="text-gray-600 text-xl leading-relaxed">Visual insights into your learning journey with detailed cognitive development analysis</p>
+        </div>
+    </div>
+
+    <!-- SOLO Levels Overview -->
+    <div class="quiz-card p-16 mb-20">
+        <h2 class="text-5xl font-bold mb-12 text-gray-800">SOLO Taxonomy Learning Path</h2>
+        <div class="grid md:grid-cols-5 gap-8">
+            <div class="text-center group">
+                <div class="solo-badge solo-prestructural mb-6 group-hover:scale-125 transition-transform duration-500">Pre-structural</div>
+                <div class="text-5xl mb-4">
+                    <i class="fas fa-search text-red-500"></i>
+                </div>
+                <p class="text-gray-600 font-semibold text-lg">Identifying misconceptions</p>
+            </div>
+            <div class="text-center group">
+                <div class="solo-badge solo-unistructural mb-6 group-hover:scale-125 transition-transform duration-500">Uni-structural</div>
+                <div class="text-5xl mb-4">
+                    <i class="fas fa-bullseye text-yellow-500"></i>
+                </div>
+                <p class="text-gray-600 font-semibold text-lg">Single concept focus</p>
+            </div>
+            <div class="text-center group">
+                <div class="solo-badge solo-multistructural mb-6 group-hover:scale-125 transition-transform duration-500">Multi-structural</div>
+                <div class="text-5xl mb-4">
+                    <i class="fas fa-link text-blue-500"></i>
+                </div>
+                <p class="text-gray-600 font-semibold text-lg">Multiple concepts</p>
+            </div>
+            <div class="text-center group">
+                <div class="solo-badge solo-relational mb-6 group-hover:scale-125 transition-transform duration-500">Relational</div>
+                <div class="text-5xl mb-4">
+                    <i class="fas fa-project-diagram text-green-500"></i>
+                </div>
+                <p class="text-gray-600 font-semibold text-lg">Connecting concepts</p>
+            </div>
+            <div class="text-center group">
+                <div class="solo-badge solo-extended mb-6 group-hover:scale-125 transition-transform duration-500">Extended Abstract</div>
+                <div class="text-5xl mb-4">
+                    <i class="fas fa-rocket text-purple-500"></i>
+                </div>
+                <p class="text-gray-600 font-semibold text-lg">Real-world application</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Learning Topics -->
+    <div class="quiz-card p-16 mb-20">
+        <h2 class="text-5xl font-bold mb-12 text-gray-800">Knowledge Graph Curriculum</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="topic-card bg-gradient-to-br from-blue-50 to-blue-100 p-8 border-2 border-blue-200">
+                <div class="text-4xl mb-4">
+                    <i class="fas fa-building text-blue-600"></i>
+                </div>
+                <h3 class="font-bold text-blue-900 text-xl mb-3">Basics of KG</h3>
+                <p class="text-blue-700 text-lg">Foundation concepts</p>
+            </div>
+            <div class="topic-card bg-gradient-to-br from-green-50 to-green-100 p-8 border-2 border-green-200">
+                <div class="text-4xl mb-4">
+                    <i class="fas fa-sitemap text-green-600"></i>
+                </div>
+                <h3 class="font-bold text-green-900 text-xl mb-3">RDF & Ontologies</h3>
+                <p class="text-green-700 text-lg">Data modeling</p>
+            </div>
+            <div class="topic-card bg-gradient-to-br from-purple-50 to-purple-100 p-8 border-2 border-purple-200">
+                <div class="text-4xl mb-4">
+                    <i class="fas fa-code text-purple-600"></i>
+                </div>
+                <h3 class="font-bold text-purple-900 text-xl mb-3">SPARQL Queries</h3>
+                <p class="text-purple-700 text-lg">Query language</p>
+            </div>
+            <div class="topic-card bg-gradient-to-br from-yellow-50 to-yellow-100 p-8 border-2 border-yellow-200">
+                <div class="text-4xl mb-4">
+                    <i class="fas fa-star text-yellow-600"></i>
+                </div>
+                <h3 class="font-bold text-yellow-900 text-xl mb-3">KG Applications</h3>
+                <p class="text-yellow-700 text-lg">Real-world uses</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Section -->
+    <div class="quiz-card p-16">
+        <div class="mb-12">
+            <label for="username" class="block text-2xl font-bold text-gray-700 mb-6">Enter your name (optional):</label>
+            <input type="text" id="username" class="px-8 py-6 border-3 border-gray-300 rounded-2xl focus:ring-6 focus:ring-purple-500 focus:border-transparent text-xl w-full max-w-lg mx-auto block transition-all duration-300 shadow-lg" placeholder="Your name">
+        </div>
+        
+        <div class="flex flex-col sm:flex-row gap-8 justify-center items-center">
+            <button onclick="startQuiz()" class="btn-primary text-center min-w-[300px]">
+                <span class="flex items-center justify-center">
+                    <i class="fas fa-rocket text-2xl mr-4"></i>
+                    Start Learning Journey
+                </span>
+            </button>
+            
+            <a href="{{ url_for('progress') }}" class="glass-card text-gray-800 px-10 py-5 text-lg font-bold border-2 border-gray-300 hover:border-purple-400 transform hover:scale-110 transition-all duration-400 shadow-2xl min-w-[300px] text-center">
+                <span class="flex items-center justify-center">
+                    <i class="fas fa-chart-line text-2xl mr-4"></i>
+                    View Progress
+                </span>
+            </a>
+            
+            <a href="{{ url_for('admin') }}" class="glass-effect text-white px-10 py-5 text-lg font-bold hover:bg-white/20 transform hover:scale-110 transition-all duration-400 shadow-2xl min-w-[300px] text-center border-2 border-white/30">
+                <span class="flex items-center justify-center">
+                    <i class="fas fa-user-graduate text-2xl mr-4"></i>
+                    Educator Mode
+                </span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+function startQuiz() {
+    const username = document.getElementById('username').value || 'Anonymous';
+    
+    // Add loading animation
+    const button = event.target;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<span class="flex items-center justify-center"><i class="fas fa-spinner animate-spin mr-4"></i>Starting...</span>';
+    button.disabled = true;
+    
+    setTimeout(() => {
+        window.location.href = `{{ url_for('start_quiz') }}?username=${encodeURIComponent(username)}`;
+    }, 1000);
+}
+
+// Add entrance animations
+document.addEventListener('DOMContentLoaded', function() {
+    const elements = document.querySelectorAll('.topic-card, .quiz-card');
+    elements.forEach((el, index) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(50px)';
+        setTimeout(() => {
+            el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+        }, index * 300);
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SOLOQuiz - Knowledge Graph Learning{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { 
+            font-family: 'Poppins', 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        
+        .main-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 30%, #f093fb 70%, #f5576c 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.98);
+        }
+        
+        .solo-badge {
+            @apply inline-flex items-center px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 shadow-lg;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .solo-prestructural { 
+            background: linear-gradient(135deg, #fee2e2, #fecaca, #fca5a5);
+            color: #991b1b;
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+        }
+        .solo-unistructural { 
+            background: linear-gradient(135deg, #fef3c7, #fde68a, #fcd34d);
+            color: #92400e;
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+        }
+        .solo-multistructural { 
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe, #93c5fd);
+            color: #1e40af;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+        .solo-relational { 
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0, #6ee7b7);
+            color: #065f46;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+        .solo-extended { 
+            background: linear-gradient(135deg, #ede9fe, #ddd6fe, #c4b5fd);
+            color: #5b21b6;
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        }
+        
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 32px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .quiz-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 300% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .quiz-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.98);
+        }
+        
+        .answer-option {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+        
+        .answer-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+        
+        .answer-option:hover::before {
+            left: 100%;
+        }
+        
+        .answer-option:hover {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            transform: translateX(12px) scale(1.05);
+            border-color: #6366f1;
+            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.2);
+        }
+        
+        .correct-answer {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0, #6ee7b7) !important;
+            border-color: #10b981 !important;
+            animation: correctPulse 0.6s ease-in-out;
+            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.3) !important;
+        }
+        
+        .incorrect-answer {
+            background: linear-gradient(135deg, #fee2e2, #fecaca, #fca5a5) !important;
+            border-color: #ef4444 !important;
+            animation: incorrectShake 0.6s ease-in-out;
+            box-shadow: 0 15px 35px rgba(239, 68, 68, 0.3) !important;
+        }
+        
+        @keyframes correctPulse {
+            0%, 100% { transform: translateX(12px) scale(1.05); }
+            50% { transform: translateX(12px) scale(1.1); }
+        }
+        
+        @keyframes incorrectShake {
+            0%, 100% { transform: translateX(12px) scale(1.05); }
+            25% { transform: translateX(8px) scale(1.05); }
+            75% { transform: translateX(16px) scale(1.05); }
+        }
+        
+        .floating-element {
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-25px); }
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 300% 100%;
+            animation: progressGradient 4s ease infinite;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        @keyframes progressGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            background-size: 200% 200%;
+            animation: gradientMove 3s ease infinite;
+            @apply text-white px-10 py-5 rounded-2xl text-lg font-bold;
+            @apply transform hover:scale-110 transition-all duration-400;
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @keyframes gradientMove {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 25px 50px rgba(102, 126, 234, 0.6);
+            transform: scale(1.1) translateY(-5px);
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .ai-hint-box {
+            background: linear-gradient(135deg, #fef3c7, #fde68a, #fcd34d);
+            border-left: 6px solid #f59e0b;
+            animation: slideIn 0.5s ease-out;
+            box-shadow: 0 15px 35px rgba(245, 158, 11, 0.2);
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .topic-card {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .topic-card:hover {
+            transform: translateY(-15px) rotate(2deg) scale(1.05);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.9));
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+        
+        .feature-icon {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            background-size: 200% 200%;
+            animation: iconGradient 4s ease infinite;
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+        }
+        
+        @keyframes iconGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .glow-effect {
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 30px rgba(102, 126, 234, 0.5); }
+            to { box-shadow: 0 0 40px rgba(102, 126, 234, 0.8); }
+        }
+    </style>
+</head>
+<body class="main-gradient min-h-screen">
+    <!-- Navigation -->
+    <nav class="glass-effect shadow-2xl relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-black/10 to-transparent"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex justify-between items-center py-8">
+                <div class="flex items-center space-x-6">
+                    <div class="floating-element">
+                        <h1 class="text-4xl font-black text-white flex items-center">
+                            <i class="fas fa-brain mr-3 text-pink-300"></i>
+                            SOLOQuiz
+                        </h1>
+                    </div>
+                    <span class="text-blue-100 text-xl font-semibold">Knowledge Graph Learning</span>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="{{ url_for('home') }}" class="nav-link text-white hover:text-pink-200 transition-all duration-300 font-semibold text-lg hover:scale-110">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                    <a href="{{ url_for('progress') }}" class="nav-link text-white hover:text-pink-200 transition-all duration-300 font-semibold text-lg hover:scale-110">
+                        <i class="fas fa-chart-line mr-2"></i>Progress
+                    </a>
+                    <a href="{{ url_for('admin') }}" class="nav-link text-white hover:text-pink-200 transition-all duration-300 font-semibold text-lg hover:scale-110">
+                        <i class="fas fa-cog mr-2"></i>Admin
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+                {% for category, message in messages %}
+                    <div class="glass-card bg-gradient-to-r from-green-100 to-green-200 border-2 border-green-400 text-green-700 px-8 py-6 mb-6 shadow-2xl pulse-animation" role="alert">
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-3xl mr-4"></i>
+                            <span class="font-semibold text-lg">{{ message }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass-effect text-white mt-24 border-t border-white/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="text-center">
+                <p class="text-xl font-semibold mb-3">&copy; 2024 SOLOQuiz - Advancing Knowledge Graph Education through SOLO Taxonomy</p>
+                <p class="text-blue-200 text-lg flex items-center justify-center">
+                    <i class="fas fa-robot mr-2"></i>
+                    Powered by Gemini 2.0 Flash for Enhanced Learning
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Global JavaScript functions
+        function getSoloClass(level) {
+            const classMap = {
+                'Pre-structural': 'solo-prestructural',
+                'Uni-structural': 'solo-unistructural',
+                'Multi-structural': 'solo-multistructural',
+                'Relational': 'solo-relational',
+                'Extended Abstract': 'solo-extended'
+            };
+            return classMap[level] || 'solo-unistructural';
+        }
+        
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Add loading animation
+        window.addEventListener('load', function() {
+            document.body.classList.add('loaded');
+        });
+    </script>
+</body>
+</html>

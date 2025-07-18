@@ -1,0 +1,271 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <!-- Progress Bar -->
+    <div class="mb-12">
+        <div class="flex justify-between items-center mb-6">
+            <span class="text-2xl font-bold text-white flex items-center">
+                <i class="fas fa-tasks mr-3"></i>Progress
+            </span>
+            <span class="text-2xl font-bold text-white">{{ current_index + 1 }} / {{ total_questions }}</span>
+        </div>
+        <div class="w-full bg-white/20 rounded-full h-6 shadow-inner backdrop-blur-sm">
+            <div class="progress-bar h-6 rounded-full transition-all duration-1000 ease-out" 
+                 style="width: {{ ((current_index + 1) / total_questions) * 100 }}%"></div>
+        </div>
+        <div class="text-center mt-4 text-white/90 text-xl font-semibold">
+            {{ "%.0f"|format(((current_index + 1) / total_questions) * 100) }}% Complete
+        </div>
+    </div>
+
+    <!-- Question Card -->
+    <div class="quiz-card p-12 mb-10">
+        <!-- SOLO Level Badge and Topic -->
+        <div class="flex justify-between items-center mb-10">
+            <div class="solo-badge {{ 'solo-' + question.level.lower().replace('-', '').replace(' ', '') }}">
+                <span class="text-xl font-bold">{{ question.level }}</span>
+            </div>
+            <div class="glass-effect px-6 py-3 rounded-full border-2 border-white/30">
+                <span class="text-white font-semibold text-lg">{{ question.topic }}</span>
+            </div>
+        </div>
+
+        <!-- Question -->
+        <h2 class="text-4xl font-bold text-gray-900 mb-12 leading-relaxed">{{ question.question }}</h2>
+
+        <!-- AI Hint Button -->
+        <div class="mb-10 text-center">
+            <button onclick="getAIHint()" id="hint-btn" class="glass-effect text-white px-8 py-4 rounded-2xl font-bold hover:bg-white/20 transition-all duration-400 shadow-2xl hover:shadow-3xl border-2 border-yellow-400/50 hover:scale-110">
+                <span class="flex items-center">
+                    <i class="fas fa-lightbulb text-2xl mr-3 text-yellow-300"></i>
+                    Get AI Hint
+                </span>
+            </button>
+        </div>
+
+        <!-- AI Hint Display -->
+        <div id="ai-hint" class="hidden ai-hint-box p-8 rounded-3xl mb-10 border-2 border-yellow-400">
+            <div class="flex items-start">
+                <i class="fas fa-robot text-3xl mr-4 text-yellow-700"></i>
+                <div>
+                    <h4 class="font-bold text-yellow-800 mb-3 text-xl">AI Hint:</h4>
+                    <p id="hint-text" class="text-yellow-700 text-lg leading-relaxed"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Answer Options -->
+        <div id="answer-options" class="space-y-6 mb-12">
+            {% set options = question.options | from_json %}
+            {% for option in options %}
+            <div class="answer-option p-8 cursor-pointer transition-all duration-400"
+                 onclick="selectAnswer('{{ option }}', this)">
+                <div class="flex items-center">
+                    <input type="radio" name="answer" value="{{ option }}" class="mr-6 h-6 w-6 text-purple-600 scale-150">
+                    <label class="text-xl cursor-pointer font-semibold text-gray-800">{{ option }}</label>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+            <button id="submit-btn" onclick="submitAnswer()" 
+                    class="btn-primary disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none min-w-[250px]"
+                    disabled>
+                <span class="flex items-center justify-center">
+                    <i class="fas fa-check text-2xl mr-4"></i>
+                    Submit Answer
+                </span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Feedback Section (Initially Hidden) -->
+    <div id="feedback-section" class="hidden">
+        <div class="quiz-card p-12">
+            <div id="feedback-content"></div>
+            <div class="mt-10 text-center">
+                <button id="next-btn" onclick="nextQuestion()" 
+                        class="btn-primary min-w-[250px]">
+                    <span class="flex items-center justify-center">
+                        <i class="fas fa-arrow-right text-2xl mr-4"></i>
+                        Next Question
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let selectedAnswer = null;
+let nextUrl = null;
+
+function selectAnswer(answer, element) {
+    // Remove previous selection
+    document.querySelectorAll('.answer-option').forEach(option => {
+        option.classList.remove('border-purple-500', 'bg-gradient-to-r', 'from-purple-50', 'to-purple-100');
+    });
+    
+    // Add selection styling
+    element.classList.add('border-purple-500', 'bg-gradient-to-r', 'from-purple-50', 'to-purple-100');
+    
+    // Set selected answer
+    selectedAnswer = answer;
+    
+    // Enable submit button with animation
+    const submitBtn = document.getElementById('submit-btn');
+    submitBtn.disabled = false;
+    submitBtn.classList.add('glow-effect');
+    setTimeout(() => submitBtn.classList.remove('glow-effect'), 2000);
+    
+    // Check radio button
+    element.querySelector('input[type="radio"]').checked = true;
+}
+
+function getAIHint() {
+    const hintBtn = document.getElementById('hint-btn');
+    const originalText = hintBtn.innerHTML;
+    
+    hintBtn.innerHTML = '<span class="flex items-center"><i class="fas fa-spinner animate-spin mr-3"></i>Getting AI Hint...</span>';
+    hintBtn.disabled = true;
+    
+    fetch('{{ url_for("get_ai_hint") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            question: '{{ question.question }}',
+            level: '{{ question.level }}',
+            topic: '{{ question.topic }}'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('hint-text').textContent = data.hint;
+        document.getElementById('ai-hint').classList.remove('hidden');
+        hintBtn.style.display = 'none';
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        hintBtn.innerHTML = originalText;
+        hintBtn.disabled = false;
+    });
+}
+
+function submitAnswer() {
+    if (!selectedAnswer) return;
+    
+    const submitBtn = document.getElementById('submit-btn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="flex items-center justify-center"><i class="fas fa-spinner animate-spin mr-4"></i>Submitting...</span>';
+    
+    fetch('{{ url_for("submit_answer") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `answer=${encodeURIComponent(selectedAnswer)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        showFeedback(data.is_correct, data.explanation, data.ai_feedback);
+        nextUrl = data.next_url;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+    });
+}
+
+function showFeedback(isCorrect, explanation, aiFeedback) {
+    // Update answer options styling
+    document.querySelectorAll('.answer-option').forEach(option => {
+        const radio = option.querySelector('input[type="radio"]');
+        if (radio.checked) {
+            if (isCorrect) {
+                option.classList.add('correct-answer');
+                option.classList.remove('border-gray-200');
+            } else {
+                option.classList.add('incorrect-answer');
+                option.classList.remove('border-gray-200');
+            }
+        }
+        option.onclick = null; // Disable clicking
+    });
+    
+    // Show feedback with enhanced styling
+    const feedbackContent = document.getElementById('feedback-content');
+    feedbackContent.innerHTML = `
+        <div class="text-center mb-10">
+            <div class="text-9xl mb-6 animate-bounce">${isCorrect ? '🎉' : '💪'}</div>
+            <h3 class="text-5xl font-bold ${isCorrect ? 'text-green-600' : 'text-orange-600'} mb-8">
+                ${isCorrect ? 'Excellent!' : 'Keep Learning!'}
+            </h3>
+        </div>
+        
+        <div class="space-y-8">
+            <div class="glass-card p-8 border-l-6 border-gray-400">
+                <h4 class="font-bold text-gray-800 mb-4 text-2xl flex items-center">
+                    <i class="fas fa-book mr-3"></i>Explanation:
+                </h4>
+                <p class="text-gray-700 text-xl leading-relaxed">${explanation}</p>
+            </div>
+            
+            ${aiFeedback ? `
+            <div class="glass-card p-8 border-l-6 border-blue-400 bg-gradient-to-r from-blue-50 to-indigo-50">
+                <h4 class="font-bold text-blue-800 mb-4 text-2xl flex items-center">
+                    <i class="fas fa-robot text-3xl mr-3"></i>
+                    AI Feedback:
+                </h4>
+                <p class="text-blue-700 text-xl leading-relaxed">${aiFeedback}</p>
+            </div>
+            ` : ''}
+        </div>
+    `;
+    
+    document.getElementById('feedback-section').classList.remove('hidden');
+    document.getElementById('submit-btn').style.display = 'none';
+    
+    // Scroll to feedback
+    document.getElementById('feedback-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+function nextQuestion() {
+    if (nextUrl) {
+        // Add loading animation
+        const nextBtn = document.getElementById('next-btn');
+        nextBtn.innerHTML = '<span class="flex items-center justify-center"><i class="fas fa-spinner animate-spin mr-4"></i>Loading...</span>';
+        
+        setTimeout(() => {
+            window.location.href = nextUrl;
+        }, 500);
+    }
+}
+
+// Add keyboard support
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && selectedAnswer && !document.getElementById('submit-btn').disabled) {
+        submitAnswer();
+    }
+});
+
+// Add entrance animation
+document.addEventListener('DOMContentLoaded', function() {
+    const quizCard = document.querySelector('.quiz-card');
+    quizCard.style.opacity = '0';
+    quizCard.style.transform = 'translateY(50px)';
+    setTimeout(() => {
+        quizCard.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+        quizCard.style.opacity = '1';
+        quizCard.style.transform = 'translateY(0)';
+    }, 300);
+});
+</script>
+{% endblock %}

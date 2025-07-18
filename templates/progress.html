@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="text-center mb-12">
+        <h1 class="text-5xl font-bold text-gray-900 mb-6">Learning Progress</h1>
+        <p class="text-2xl text-gray-600">Track your Knowledge Graph learning journey across SOLO Taxonomy levels</p>
+    </div>
+
+    {% if progress_data %}
+    <!-- Overall Statistics -->
+    <div class="grid md:grid-cols-4 gap-8 mb-12">
+        <div class="quiz-card bg-white rounded-2xl shadow-xl p-8 text-center hover:scale-105 transition-transform duration-300">
+            <div class="text-5xl font-bold text-blue-600 mb-4">{{ progress_data.total_attempts }}</div>
+            <div class="text-gray-600 text-xl font-medium">Total Attempts</div>
+            <div class="text-4xl mt-3">📝</div>
+        </div>
+        <div class="quiz-card bg-white rounded-2xl shadow-xl p-8 text-center hover:scale-105 transition-transform duration-300">
+            <div class="text-5xl font-bold text-green-600 mb-4">{{ progress_data.topic_performance|length }}</div>
+            <div class="text-gray-600 text-xl font-medium">Topics Explored</div>
+            <div class="text-4xl mt-3">🌐</div>
+        </div>
+        <div class="quiz-card bg-white rounded-2xl shadow-xl p-8 text-center hover:scale-105 transition-transform duration-300">
+            <div class="text-5xl font-bold text-purple-600 mb-4">{{ progress_data.level_performance|length }}</div>
+            <div class="text-gray-600 text-xl font-medium">SOLO Levels</div>
+            <div class="text-4xl mt-3">🎯</div>
+        </div>
+        <div class="quiz-card bg-white rounded-2xl shadow-xl p-8 text-center hover:scale-105 transition-transform duration-300">
+            <div class="text-5xl font-bold text-orange-600 mb-4">
+                {% set total_correct = progress_data.topic_performance.values() | sum(attribute='correct') %}
+                {% set total_questions = progress_data.topic_performance.values() | sum(attribute='total') %}
+                {{ "%.0f"|format((total_correct / total_questions * 100) if total_questions > 0 else 0) }}%
+            </div>
+            <div class="text-gray-600 text-xl font-medium">Overall Accuracy</div>
+            <div class="text-4xl mt-3">🎯</div>
+        </div>
+    </div>
+
+    <!-- SOLO Level Performance -->
+    <div class="quiz-card bg-white rounded-3xl shadow-2xl p-10 mb-12">
+        <h2 class="text-3xl font-bold mb-8 text-center text-gray-800">SOLO Taxonomy Performance</h2>
+        <div class="grid md:grid-cols-5 gap-6 mb-8">
+            {% for level, performance in progress_data.level_performance.items() %}
+            <div class="text-center group">
+                <div class="solo-badge {{ 'solo-' + level.lower().replace('-', '').replace(' ', '') }} mb-4 group-hover:scale-110 transition-transform duration-300">
+                    {{ level }}
+                </div>
+                <div class="text-3xl font-bold text-gray-800 mb-2">{{ performance.correct }}/{{ performance.total }}</div>
+                <div class="text-lg text-gray-600 mb-4">{{ "%.0f"|format(performance.percentage) }}%</div>
+                <div class="w-full bg-gray-200 rounded-full h-4">
+                    <div class="bg-gradient-to-r from-blue-500 to-purple-500 h-4 rounded-full transition-all duration-1000" 
+                         style="width: {{ performance.percentage }}%"></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- SOLO Level Chart -->
+        <div class="mt-10">
+            <canvas id="soloChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+
+    <!-- Topic Performance -->
+    <div class="quiz-card bg-white rounded-3xl shadow-2xl p-10 mb-12">
+        <h2 class="text-3xl font-bold mb-8 text-gray-800">Performance by Topic</h2>
+        <div class="space-y-6">
+            {% for topic, performance in progress_data.topic_performance.items() %}
+            <div class="border-l-4 border-blue-400 pl-6 py-4 bg-gradient-to-r from-blue-50 to-transparent rounded-r-2xl hover:shadow-lg transition-all duration-300">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-bold text-gray-800 text-xl">{{ topic }}</h3>
+                    <span class="text-lg text-gray-600 font-semibold">{{ performance.correct }}/{{ performance.total }} ({{ "%.0f"|format(performance.percentage) }}%)</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div class="bg-gradient-to-r from-green-500 to-blue-500 h-3 rounded-full transition-all duration-1000" 
+                         style="width: {{ performance.percentage }}%"></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Learning Recommendations -->
+    <div class="quiz-card bg-white rounded-3xl shadow-2xl p-10 mb-12">
+        <h2 class="text-3xl font-bold mb-8 text-gray-800">Personalized Learning Recommendations</h2>
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="space-y-6">
+                <h3 class="text-2xl font-bold text-gray-800 flex items-center">
+                    <span class="text-3xl mr-3">💪</span>
+                    Strengths
+                </h3>
+                {% for level, performance in progress_data.level_performance.items() %}
+                    {% if performance.percentage >= 75 %}
+                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-400 p-6 rounded-2xl">
+                        <h4 class="font-bold text-green-800 text-lg mb-2">{{ level }}</h4>
+                        <p class="text-green-700">Excellent performance! You've mastered this cognitive level.</p>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            
+            <div class="space-y-6">
+                <h3 class="text-2xl font-bold text-gray-800 flex items-center">
+                    <span class="text-3xl mr-3">🎯</span>
+                    Growth Areas
+                </h3>
+                {% for level, performance in progress_data.level_performance.items() %}
+                    {% if performance.percentage < 60 %}
+                    <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border-l-4 border-yellow-400 p-6 rounded-2xl">
+                        <h4 class="font-bold text-yellow-800 text-lg mb-2">{{ level }}</h4>
+                        <p class="text-yellow-700">
+                            {% if level == 'Pre-structural' %}
+                            Focus on identifying common misconceptions and clarifying basic concepts.
+                            {% elif level == 'Uni-structural' %}
+                            Review fundamental definitions and key terminology.
+                            {% elif level == 'Multi-structural' %}
+                            Practice listing and categorizing multiple related concepts.
+                            {% elif level == 'Relational' %}
+                            Work on understanding connections between different concepts.
+                            {% elif level == 'Extended Abstract' %}
+                            Apply knowledge to new scenarios and real-world problems.
+                            {% endif %}
+                        </p>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create SOLO Level Performance Chart
+        const ctx = document.getElementById('soloChart').getContext('2d');
+        const soloChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: [
+                    {% for level in progress_data.level_performance.keys() %}
+                    '{{ level }}'{{ ',' if not loop.last }}
+                    {% endfor %}
+                ],
+                datasets: [{
+                    label: 'Performance %',
+                    data: [
+                        {% for performance in progress_data.level_performance.values() %}
+                        {{ performance.percentage }}{{ ',' if not loop.last }}
+                        {% endfor %}
+                    ],
+                    backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                    borderColor: 'rgba(99, 102, 241, 1)',
+                    borderWidth: 3,
+                    pointBackgroundColor: 'rgba(99, 102, 241, 1)',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(99, 102, 241, 1)',
+                    pointHoverRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            stepSize: 20,
+                            font: {
+                                size: 12
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        },
+                        angleLines: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                elements: {
+                    line: {
+                        tension: 0.2
+                    }
+                }
+            }
+        });
+    </script>
+
+    {% else %}
+    <!-- No Data State -->
+    <div class="text-center py-20">
+        <div class="text-8xl mb-8 animate-bounce">📊</div>
+        <h2 class="text-4xl font-bold text-gray-800 mb-6">No Progress Data Yet</h2>
+        <p class="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">Take your first quiz to start tracking your learning journey and unlock detailed insights into your Knowledge Graph mastery!</p>
+        <a href="{{ url_for('home') }}" class="btn-primary">
+            <span class="flex items-center justify-center">
+                <span class="text-2xl mr-3">🚀</span>
+                Start Learning
+            </span>
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row gap-6 justify-center mt-12">
+        <a href="{{ url_for('home') }}" class="btn-primary text-center min-w-[200px]">
+            <span class="flex items-center justify-center">
+                <span class="text-2xl mr-3">🔄</span>
+                Take Another Quiz
+            </span>
+        </a>
+        <a href="{{ url_for('admin') }}" class="bg-gradient-to-r from-gray-700 to-gray-800 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:from-gray-800 hover:to-gray-900 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl text-center min-w-[200px]">
+            <span class="flex items-center justify-center">
+                <span class="text-2xl mr-3">👨‍🏫</span>
+                Educator Mode
+            </span>
+        </a>
+    </div>
+</div>
+
+<script>
+// Add entrance animations
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.quiz-card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        setTimeout(() => {
+            card.style.transition = 'all 0.6s ease-out';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 200);
+    });
+    
+    // Animate progress bars
+    setTimeout(() => {
+        const progressBars = document.querySelectorAll('.bg-gradient-to-r');
+        progressBars.forEach(bar => {
+            if (bar.style.width) {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 500);
+            }
+        });
+    }, 1000);
+});
+</script>
+{% endblock %}
