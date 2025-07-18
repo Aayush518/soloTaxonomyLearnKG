@@ -11,15 +11,12 @@
     <style>
         body { 
             font-family: 'Poppins', 'Inter', sans-serif; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-            background-attachment: fixed;
+            background: #ffffff;
             min-height: 100vh;
         }
         
         .main-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 30%, #f093fb 70%, #f5576c 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
+            background: #ffffff;
         }
         
         @keyframes gradientShift {
@@ -54,41 +51,44 @@
             @apply inline-flex items-center px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 shadow-lg;
             backdrop-filter: blur(10px);
             border: 2px solid rgba(255, 255, 255, 0.3);
+            color: #000000;
+            background: #ffffff;
+            border: 1px solid #d1d5db;
         }
         
         .solo-prestructural { 
-            background: linear-gradient(135deg, #fee2e2, #fecaca, #fca5a5);
-            color: #991b1b;
-            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+            background: linear-gradient(135deg, #fffbe7, #ffe29a, #ffd700);
+            color: #b8860b;
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
         }
         .solo-unistructural { 
-            background: linear-gradient(135deg, #fef3c7, #fde68a, #fcd34d);
-            color: #92400e;
-            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+            background: linear-gradient(135deg, #e0f7fa, #80deea, #26c6da);
+            color: #00838f;
+            box-shadow: 0 8px 25px rgba(38, 198, 218, 0.2);
         }
         .solo-multistructural { 
-            background: linear-gradient(135deg, #dbeafe, #bfdbfe, #93c5fd);
-            color: #1e40af;
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+            background: linear-gradient(135deg, #e0ffe7, #a8e063, #56ab2f);
+            color: #38761d;
+            box-shadow: 0 8px 25px rgba(86, 171, 47, 0.2);
         }
         .solo-relational { 
-            background: linear-gradient(135deg, #d1fae5, #a7f3d0, #6ee7b7);
-            color: #065f46;
-            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+            background: linear-gradient(135deg, #fffde4, #f9d423, #ff4e50);
+            color: #c0392b;
+            box-shadow: 0 8px 25px rgba(249, 212, 35, 0.2);
         }
         .solo-extended { 
-            background: linear-gradient(135deg, #ede9fe, #ddd6fe, #c4b5fd);
-            color: #5b21b6;
-            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+            background: linear-gradient(135deg, #f8ffae, #43cea2, #185a9d);
+            color: #185a9d;
+            box-shadow: 0 8px 25px rgba(67, 206, 162, 0.2);
         }
         
         .quiz-card {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.97);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 32px;
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 40px rgba(255, 183, 77, 0.12);
             position: relative;
             overflow: hidden;
         }
@@ -100,7 +100,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background: linear-gradient(90deg, #f6d365, #fda085, #fbc2eb, #a8edea);
             background-size: 300% 100%;
             animation: shimmer 3s ease-in-out infinite;
         }
@@ -120,11 +120,13 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
-            background: rgba(255, 255, 255, 0.8);
+            background: #ffffff;
             backdrop-filter: blur(10px);
             border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 20px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            color: #000000;
+            border: 1px solid #d1d5db;
         }
         
         .answer-option::before {
@@ -150,15 +152,17 @@
         }
         
         .correct-answer {
-            background: linear-gradient(135deg, #d1fae5, #a7f3d0, #6ee7b7) !important;
+            background: #d1fae5 !important;
             border-color: #10b981 !important;
+            color: #000000 !important;
             animation: correctPulse 0.6s ease-in-out;
             box-shadow: 0 15px 35px rgba(16, 185, 129, 0.3) !important;
         }
         
         .incorrect-answer {
-            background: linear-gradient(135deg, #fee2e2, #fecaca, #fca5a5) !important;
+            background: #fee2e2 !important;
             border-color: #ef4444 !important;
+            color: #000000 !important;
             animation: incorrectShake 0.6s ease-in-out;
             box-shadow: 0 15px 35px rgba(239, 68, 68, 0.3) !important;
         }
@@ -184,11 +188,11 @@
         }
         
         .progress-bar {
-            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background: #f6d365;
             background-size: 300% 100%;
             animation: progressGradient 4s ease infinite;
             border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 25px rgba(246, 211, 101, 0.3);
         }
         
         @keyframes progressGradient {
@@ -197,16 +201,19 @@
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            background: #f6d365;
             background-size: 200% 200%;
             animation: gradientMove 3s ease infinite;
             @apply text-white px-10 py-5 rounded-2xl text-lg font-bold;
             @apply transform hover:scale-110 transition-all duration-400;
-            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 15px 35px rgba(246, 211, 101, 0.3);
             border: 2px solid rgba(255, 255, 255, 0.3);
             backdrop-filter: blur(10px);
             position: relative;
             overflow: hidden;
+            color: #000000;
+            border: 1px solid #d1d5db;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         
         @keyframes gradientMove {
@@ -215,7 +222,9 @@
         }
         
         .btn-primary:hover {
-            box-shadow: 0 25px 50px rgba(102, 126, 234, 0.6);
+            background: #fda085;
+            color: #000000;
+            box-shadow: 0 25px 50px rgba(253, 160, 133, 0.4);
             transform: scale(1.1) translateY(-5px);
         }
         
@@ -263,10 +272,11 @@
         }
         
         .feature-icon {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: #f6d365;
             background-size: 200% 200%;
             animation: iconGradient 4s ease infinite;
-            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 15px 35px rgba(246, 211, 101, 0.3);
+            color: #000000;
         }
         
         @keyframes iconGradient {
@@ -277,6 +287,7 @@
         .nav-link {
             position: relative;
             transition: all 0.3s ease;
+            color: #000000;
         }
         
         .nav-link::after {
@@ -296,13 +307,17 @@
             width: 100%;
         }
         
+        .nav-link:hover {
+            color: #f6d365;
+        }
+        
         .stats-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.97), rgba(255, 255, 255, 0.9));
             backdrop-filter: blur(20px);
             border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 24px;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 35px rgba(255, 183, 77, 0.12);
             position: relative;
             overflow: hidden;
         }
@@ -314,7 +329,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            background: linear-gradient(90deg, #f6d365, #fda085, #fbc2eb);
             background-size: 200% 100%;
             animation: shimmer 3s ease-in-out infinite;
         }
@@ -342,6 +357,74 @@
             from { box-shadow: 0 0 30px rgba(102, 126, 234, 0.5); }
             to { box-shadow: 0 0 40px rgba(102, 126, 234, 0.8); }
         }
+        .quiz-card, .stats-card, .topic-card, .glass-card {
+            background: #ffffff;
+            color: #000000;
+            border: 1px solid #d1d5db;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .quiz-card h2, .stats-card h2, .topic-card h3, .glass-card h2, .glass-card h3 {
+            color: #000000;
+        }
+        .glass-effect, .glass-card {
+            background: #ffffff;
+            color: #000000;
+        }
+        .nav {
+            background: #ffffff;
+            color: #000000;
+        }
+        .nav h1 {
+            color: #000000;
+        }
+        .nav span {
+            color: #6b7280;
+        }
+        .footer {
+            background: #ffffff;
+            color: #000000;
+        }
+        .footer p {
+            color: #6b7280;
+        }
+        .nav-link {
+            color: #000000;
+        }
+        .nav-link:hover {
+            color: #f6d365;
+        }
+        .answer-option {
+            background: #ffffff;
+            color: #000000;
+            border: 1px solid #d1d5db;
+        }
+        .correct-answer {
+            background: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #000000 !important;
+        }
+        .incorrect-answer {
+            background: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #000000 !important;
+        }
+        .nav {
+            background: #ffffff;
+            color: #000000;
+        }
+        .nav h1 {
+            color: #000000;
+        }
+        .nav span {
+            color: #6b7280;
+        }
+        .footer {
+            background: #ffffff;
+            color: #000000;
+        }
+        .footer p {
+            color: #6b7280;
+        }
     </style>
 </head>
 <body class="main-gradient min-h-screen">
@@ -352,21 +435,21 @@
             <div class="flex justify-between items-center py-8">
                 <div class="flex items-center space-x-6">
                     <div class="floating-element">
-                        <h1 class="text-4xl font-black text-white flex items-center">
-                            <i class="fas fa-brain mr-3 text-pink-300"></i>
+                        <h1 class="text-4xl font-black text-black flex items-center">
+                            <i class="fas fa-brain mr-3 text-orange-400"></i>
                             SOLOQuiz
                         </h1>
                     </div>
-                    <span class="text-blue-100 text-xl font-semibold">Knowledge Graph Learning</span>
+                    <span class="text-gray-600 text-xl font-semibold">Knowledge Graph Learning</span>
                 </div>
                 <div class="flex space-x-6">
-                    <a href="{{ url_for('home') }}" class="nav-link text-white hover:text-pink-200 transition-all duration-300 font-semibold text-lg hover:scale-110">
+                    <a href="{{ url_for('home') }}" class="nav-link text-black hover:text-orange-400 transition-all duration-300 font-semibold text-lg hover:scale-110">
                         <i class="fas fa-home mr-2"></i>Home
                     </a>
-                    <a href="{{ url_for('progress') }}" class="nav-link text-white hover:text-pink-200 transition-all duration-300 font-semibold text-lg hover:scale-110">
+                    <a href="{{ url_for('progress') }}" class="nav-link text-black hover:text-orange-400 transition-all duration-300 font-semibold text-lg hover:scale-110">
                         <i class="fas fa-chart-line mr-2"></i>Progress
                     </a>
-                    <a href="{{ url_for('admin') }}" class="nav-link text-white hover:text-pink-200 transition-all duration-300 font-semibold text-lg hover:scale-110">
+                    <a href="{{ url_for('admin') }}" class="nav-link text-black hover:text-orange-400 transition-all duration-300 font-semibold text-lg hover:scale-110">
                         <i class="fas fa-cog mr-2"></i>Admin
                     </a>
                 </div>
@@ -379,7 +462,7 @@
         {% if messages %}
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
                 {% for category, message in messages %}
-                    <div class="glass-card bg-gradient-to-r from-green-100 to-green-200 border-2 border-green-400 text-green-700 px-8 py-6 mb-6 shadow-2xl pulse-animation" role="alert">
+                    <div class="glass-card bg-white border-2 border-green-400 text-green-700 px-8 py-6 mb-6 shadow-2xl pulse-animation" role="alert">
                         <div class="flex items-center">
                             <i class="fas fa-check-circle text-3xl mr-4"></i>
                             <span class="font-semibold text-lg">{{ message }}</span>
@@ -396,11 +479,11 @@
     </main>
 
     <!-- Footer -->
-    <footer class="glass-effect text-white mt-24 border-t border-white/20">
+    <footer class="glass-effect text-black mt-24 border-t border-gray-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="text-center">
-                <p class="text-xl font-semibold mb-3">&copy; 2024 SOLOQuiz - Advancing Knowledge Graph Education through SOLO Taxonomy</p>
-                <p class="text-blue-200 text-lg flex items-center justify-center">
+                <p class="text-xl font-semibold mb-3 text-black">&copy; 2024 SOLOQuiz - Advancing Knowledge Graph Education through SOLO Taxonomy</p>
+                <p class="text-gray-600 text-lg flex items-center justify-center">
                     <i class="fas fa-robot mr-2"></i>
                     Powered by Gemini 2.0 Flash for Enhanced Learning
                 </p>
